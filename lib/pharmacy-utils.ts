@@ -164,7 +164,7 @@ export function formatTimeSlots(
     !slots ||
     (typeof slots === "object" && "closed" in slots && slots.closed)
   )
-    return "Fermé";
+    return "Fermée";
 
   if (Array.isArray(slots)) {
     return slots.map((slot) => `${slot.open} - ${slot.close}`).join(" / ");
@@ -174,7 +174,7 @@ export function formatTimeSlots(
     return `${slots.open} - ${slots.close}`;
   }
 
-  return "Fermé"; // Fallback si le format n'est pas reconnu
+  return "Fermée"; // Fallback si le format n'est pas reconnu
 }
 
 /**
@@ -228,14 +228,14 @@ export function getCurrentDayStatus(openingHours: OpeningHours): {
     if (currentMinutes < openTime) {
       return {
         isOpen: false,
-        status: "Fermé",
+        status: "Fermée",
         nextChange: `Ouvre à ${interval.open}`,
       };
     }
     if (currentMinutes >= openTime && currentMinutes <= closeTime) {
       return {
         isOpen: true,
-        status: "Ouvert",
+        status: "Ouverte",
         nextChange: `Ferme à ${interval.close}`,
       };
     }
@@ -244,7 +244,7 @@ export function getCurrentDayStatus(openingHours: OpeningHours): {
   const nextOpening = getNextOpenTime(openingHours);
   return {
     isOpen: false,
-    status: "Fermé",
+    status: "Fermée",
     nextChange: nextOpening || undefined,
   };
 }
@@ -326,7 +326,7 @@ export function formatOpeningHours(
         return `${day.name}: ${hoursStr}`;
       }
 
-      return `${day.name}: Fermé`;
+      return `${day.name}: Fermée`;
     })
     .join("\n");
 }

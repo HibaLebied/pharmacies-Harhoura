@@ -7,7 +7,7 @@ import { PharmacyCard } from "@/components/pharmacy-card-list";
 import { SearchBar } from "@/components/search-bar";
 import { DayFilter } from "@/components/day-filter";
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock, Filter } from "lucide-react";
+import { MapPin, Clock, Filter, Home } from "lucide-react";
 import Link from "next/link";
 import { pharmacyService } from "@/lib/pharmacy-service";
 import { DemoBanner } from "@/components/demo-banner";
@@ -67,24 +67,24 @@ export default function PharmaciesPage() {
       );
     }
 
-    // Filtrer par jour
-    if (selectedDay) {
-      filtered = filtered.filter((pharmacy) =>
-        isPharmacyOpenOnDay(
-          pharmacy.opening_hours,
-          selectedDay as keyof typeof pharmacy.opening_hours
-        )
-      );
-    }
+    // // Filtrer par jour
+    // if (selectedDay) {
+    //   filtered = filtered.filter((pharmacy) =>
+    //     isPharmacyOpenOnDay(
+    //       pharmacy.opening_hours,
+    //       selectedDay as keyof typeof pharmacy.opening_hours
+    //     )
+    //   );
+    // }
 
     // Trier
-    if (!selectedDay) {
-      return filtered.sort((a, b) => {
-        if (a.isOpen && !b.isOpen) return -1;
-        if (!a.isOpen && b.isOpen) return 1;
-        return a.name.localeCompare(b.name);
-      });
-    }
+    // if (!selectedDay) {
+    //   return filtered.sort((a, b) => {
+    //     if (a.isOpen && !b.isOpen) return -1;
+    //     if (!a.isOpen && b.isOpen) return 1;
+    //     return a.name.localeCompare(b.name);
+    //   });
+    // }
 
     return filtered.sort((a, b) => a.name.localeCompare(b.name));
   }, [pharmacies, searchQuery, selectedDay]);
@@ -135,7 +135,7 @@ export default function PharmaciesPage() {
         )}
 
         {/* Stats - jour sélectionné */}
-        {selectedDay && (
+        {/* {selectedDay && (
           <div className="flex flex-wrap justify-center gap-4 mb-6">
             <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg">
               <span className="font-semibold">{filteredPharmacies.length}</span>{" "}
@@ -144,7 +144,7 @@ export default function PharmaciesPage() {
               {filteredPharmacies.length > 1 ? "s" : ""} ce jour
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Quick Actions */}
         <div className="flex flex-wrap justify-center gap-3">
@@ -154,13 +154,16 @@ export default function PharmaciesPage() {
               Pharmacies de garde
             </Button>
           </Link>
-          <Button
-            variant="outline"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Filter className="h-4 w-4 mr-2" />
-            Filtres
-          </Button>
+          <Link href="/">
+            <Button
+              variant="outline"
+              //onClick={() => setShowFilters(!showFilters)}
+            >
+              {/* <Filter className="h-4 w-4 mr-2" /> */}
+              <Home className="h-4 w-4 mr-2" />
+              Accueil
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -172,14 +175,14 @@ export default function PharmaciesPage() {
           placeholder="Rechercher par nom ou adresse..."
         />
 
-        {showFilters && (
+        {/* {showFilters && (
           <div className="bg-white p-4 rounded-lg border">
             <h3 className="font-medium text-gray-900 mb-3">
               Filtrer par jour d'ouverture
             </h3>
             <DayFilter selectedDay={selectedDay} onDayChange={setSelectedDay} />
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Results */}

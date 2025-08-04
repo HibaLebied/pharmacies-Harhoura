@@ -29,7 +29,6 @@ export function PharmacyCard({
   const displaySlots = pharmacy.opening_hours[displayDay] || [];
   const isToday = displayDay === currentDay;
 
-  // Utiliser la nouvelle fonction pour obtenir le statut
   const dayStatus = getCurrentDayStatus(pharmacy.opening_hours);
 
   return (
@@ -66,7 +65,7 @@ export function PharmacyCard({
                 className={
                   dayStatus.isOpen
                     ? "bg-green-500 hover:bg-green-600"
-                    : "bg-red-500 hover:bg-red-600"
+                    : "bg-red-500 hover:bg-red-600 text-white"
                 }
               >
                 {dayStatus.status}
@@ -92,9 +91,13 @@ export function PharmacyCard({
               </div>
             )}
 
-            {dayStatus.nextChange && isToday && (
-              <div className="flex items-center gap-2 text-orange-600">
-                <Clock className="h-4 w-4 flex-shrink-0" />
+            {dayStatus.nextChange && (
+              <div
+                className={`flex items-center ${
+                  dayStatus.isOpen ? "text-green-600" : "text-orange-600"
+                }`}
+              >
+                <Clock className="h-4 w-4 mr-1" />
                 <span>{dayStatus.nextChange}</span>
               </div>
             )}
