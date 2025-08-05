@@ -6,7 +6,7 @@ import { getCurrentTime, getCurrentDayStatus } from "@/lib/pharmacy-utils";
 import { PharmacyCard } from "@/components/pharmacy-card-list";
 import { SearchBar } from "@/components/search-bar";
 import { Button } from "@/components/ui/button";
-import { Clock, RefreshCw, AlertCircle, MapPin } from "lucide-react";
+import { Clock, RefreshCw, AlertCircle, MapPin, Home } from "lucide-react";
 import Link from "next/link";
 import { pharmacyService } from "@/lib/pharmacy-service";
 import { DemoBanner } from "@/components/demo-banner";
@@ -128,16 +128,13 @@ export default function PharmacieDeGardePage() {
 
       {/* Actions */}
       <div className="flex flex-wrap justify-center gap-3 mb-8">
-        <Button
-          onClick={fetchOpenPharmacies}
-          variant="outline"
-          disabled={loading}
-        >
-          <RefreshCw
-            className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
-          />
-          Actualiser
-        </Button>
+        <Link href="/">
+          <Button variant="outline">
+            <Home className="h-4 w-4 mr-2" />
+            Accueil
+          </Button>
+        </Link>
+
         <Link href="/pharmacies">
           <Button variant="outline">
             <MapPin className="h-4 w-4 mr-2" />
