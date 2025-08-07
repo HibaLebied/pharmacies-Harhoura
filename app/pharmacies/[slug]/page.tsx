@@ -37,7 +37,7 @@ export default async function PharmacyPage({
 }) {
   const { slug } = await params;
 
-  // 1. Récupérer toutes les pharmacies
+  //Récupérer toutes les pharmacies
   const { data: pharmacies, error } = await supabase
     .from("pharmacies")
     .select("*");
@@ -52,7 +52,7 @@ export default async function PharmacyPage({
     return notFound();
   }
 
-  // 2. Trouver la pharmacie correspondant au slug
+  //Trouver la pharmacie correspondant au slug
   const pharmacy = pharmacies.find((ph) => {
     const pharmacySlug = slugify(ph.name);
     return pharmacySlug === slug;
@@ -67,7 +67,7 @@ export default async function PharmacyPage({
     return notFound();
   }
 
-  // 3. Calculer les informations dérivées
+  //Calculer les informations dérivées
   const dayStatus = getCurrentDayStatus(pharmacy.opening_hours);
   const { latitude, longitude } = pharmacy;
 
