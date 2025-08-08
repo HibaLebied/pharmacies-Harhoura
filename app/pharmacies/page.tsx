@@ -157,7 +157,7 @@ export default function PharmaciesPage() {
         )} */}
 
         {/* Quick Actions */}
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-3 mb-8">
           <Link href="/pharmaciesDeGarde">
             <Button className="bg-green-600 hover:bg-green-700">
               <Clock className="h-4 w-4 mr-2" />

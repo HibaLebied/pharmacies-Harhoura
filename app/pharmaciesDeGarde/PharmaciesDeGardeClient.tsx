@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { PharmacyWithStatus } from "@/lib/types";
 import { getCurrentTime } from "@/lib/pharmacy-utils";
 import { PharmacyCard } from "@/components/pharmacy-card-list";
 import { SearchBar } from "@/components/search-bar";
 import { Button } from "@/components/ui/button";
-import { Clock, RefreshCw, AlertCircle, MapPin } from "lucide-react";
+import { Clock, RefreshCw, AlertCircle, MapPin, Home } from "lucide-react";
 import Link from "next/link";
 import { DemoBanner } from "@/components/demo-banner";
 
@@ -21,7 +21,12 @@ export default function PharmaciesDeGardeClient({
 }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [lastUpdate] = useState(new Date()); // snapshot au chargement
-  const currentTime = getCurrentTime();
+  const [currentTime, setCurrentTime] = useState("");
+
+  // Initialise currentTime uniquement côté client pour éviter le mismatch SSR
+  useEffect(() => {
+    setCurrentTime(getCurrentTime());
+  }, []);
 
   const filteredPharmacies = pharmacies.filter((pharmacy) => {
     if (!searchQuery.trim()) return true;
@@ -70,9 +75,15 @@ export default function PharmaciesDeGardeClient({
       {/* Actions */}
       <div className="flex flex-wrap justify-center gap-3 mb-8">
         <Link href="/pharmacies">
-          <Button variant="outline">
+          <Button className="bg-green-600 hover:bg-green-700">
             <MapPin className="h-4 w-4 mr-2" />
             Voir toutes les pharmacies
+          </Button>
+        </Link>
+        <Link href="/">
+          <Button variant="outline">
+            <Home className="h-4 w-4 mr-2" />
+            Accueil
           </Button>
         </Link>
       </div>
@@ -128,7 +139,7 @@ export default function PharmaciesDeGardeClient({
                 Toutes les pharmacies sont actuellement fermées. Consultez les
                 horaires pour connaître les prochaines ouvertures.
               </p>
-              <Link href="/pharmacie">
+              <Link href="/pharmacies">
                 <Button>Voir toutes les pharmacies</Button>
               </Link>
             </>
