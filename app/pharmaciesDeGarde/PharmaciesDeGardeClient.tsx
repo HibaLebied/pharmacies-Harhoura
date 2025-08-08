@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { PharmacyWithStatus } from "@/lib/types";
-import { getCurrentTime } from "@/lib/pharmacy-utils";
+import { useEffect, useState, useMemo } from "react";
+import type { Pharmacy } from "@/lib/types";
+import { getCurrentTime, getCurrentDayStatus } from "@/lib/pharmacy-utils";
 import { PharmacyCard } from "@/components/pharmacy-card-list";
 import { SearchBar } from "@/components/search-bar";
 import { Button } from "@/components/ui/button";
@@ -10,25 +10,47 @@ import { Clock, RefreshCw, AlertCircle, MapPin, Home } from "lucide-react";
 import Link from "next/link";
 import { DemoBanner } from "@/components/demo-banner";
 
-type Props = {
-  pharmacies: PharmacyWithStatus[];
+interface Props {
+  pharmacies: Pharmacy[];
   databaseError: boolean;
-};
+}
 
 export default function PharmaciesDeGardeClient({
   pharmacies,
   databaseError,
 }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [lastUpdate] = useState(new Date()); // snapshot au chargement
   const [currentTime, setCurrentTime] = useState("");
+  const [lastUpdate, setLastUpdate] = useState("");
 
-  // Initialise currentTime uniquement côté client pour éviter le mismatch SSR
+  // Initialisation de currentTime et lastUpdate côté client seulement
   useEffect(() => {
     setCurrentTime(getCurrentTime());
+    setLastUpdate(
+      new Date().toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    );
   }, []);
 
-  const filteredPharmacies = pharmacies.filter((pharmacy) => {
+  // Calcul et filtrage des pharmacies ouvertes côté client
+  const openPharmacies = useMemo(() => {
+    return pharmacies
+      .map((pharmacy) => {
+        const status = getCurrentDayStatus(pharmacy.opening_hours);
+        return {
+          ...pharmacy,
+          isOpen: status.isOpen,
+          nextOpenTime: status.nextChange,
+          statusText: status.status,
+        };
+      })
+      .filter((pharmacy) => pharmacy.isOpen);
+  }, [pharmacies]);
+
+  // Filtrage selon la recherche
+  const filteredPharmacies = openPharmacies.filter((pharmacy) => {
     if (!searchQuery.trim()) return true;
     const query = searchQuery.toLowerCase();
     return (
@@ -61,13 +83,7 @@ export default function PharmaciesDeGardeClient({
           </div>
           <div className="flex items-center gap-1">
             <RefreshCw className="h-4 w-4" />
-            <span>
-              Dernière mise à jour:{" "}
-              {lastUpdate.toLocaleTimeString("fr-FR", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </span>
+            <span>Dernière mise à jour: {lastUpdate}</span>
           </div>
         </div>
       </div>
@@ -100,19 +116,19 @@ export default function PharmaciesDeGardeClient({
       {/* Status Banner */}
       <div
         className={`p-4 rounded-lg mb-8 ${
-          pharmacies.length > 0
+          filteredPharmacies.length > 0
             ? "bg-green-50 border border-green-200"
             : "bg-orange-50 border border-orange-200"
         }`}
       >
         <div className="flex items-center gap-3">
-          {pharmacies.length > 0 ? (
+          {filteredPharmacies.length > 0 ? (
             <>
               <div className="h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
               <span className="font-medium text-green-800">
-                {pharmacies.length} pharmacie
-                {pharmacies.length > 1 ? "s" : ""} ouverte
-                {pharmacies.length > 1 ? "s" : ""} maintenant
+                {filteredPharmacies.length} pharmacie
+                {filteredPharmacies.length > 1 ? "s" : ""} ouverte
+                {filteredPharmacies.length > 1 ? "s" : ""} maintenant
               </span>
             </>
           ) : (
