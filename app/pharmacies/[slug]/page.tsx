@@ -17,9 +17,9 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
+  const { slug } = params;
 
   return {
     title: `Pharmacie ${slug.replace(/-/g, " ")}`,
@@ -33,9 +33,9 @@ export async function generateMetadata({
 export default async function PharmacyPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
+  const { slug } = params;
 
   //Récupérer toutes les pharmacies
   const { data: pharmacies, error } = await supabase
